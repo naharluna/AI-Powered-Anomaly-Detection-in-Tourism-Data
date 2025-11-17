@@ -62,6 +62,7 @@ The architecture follows a **stacked ensemble** design:
   │ ML Model 1   │   │ ML Model 2   │    │ Neural Network │
   │ (e.g., RF)   │   │ (e.g., XGB)  │    │   (Dense NN)   │
   └─────────────┘   └─────────────┘    └────────────────┘
+  
           │                 │                  │
           └───────────┬─────┴──────┬──────────┘
                       ▼             ▼
