@@ -24,18 +24,114 @@ This repository contains an end-to-end machine learning workflow for **detecting
 
 ---
 
-## 🧩 Models Included
+## 🏗️ Model Architecture
 
-### **1️⃣ Baseline: CatBoost Classifier**
-A strong gradient boosting model used as the initial benchmark for anomaly detection.
+This project uses two main modeling approaches:
 
-### **2️⃣ Proposed Hybrid Model: TH-StackNet**
-A stacked architecture combining:
-- Traditional ML algorithms  
-- Neural network components  
-- Layer-wise stacking for performance improvement  
+---
 
-This model aims to increase detection accuracy and reduce false alarms.
+# **1️⃣ Baseline Model: CatBoost Classifier**
+
+A powerful gradient-boosting algorithm designed for:
+- Handling categorical + numerical data automatically  
+- Fast training  
+- High accuracy on tabular datasets  
+- Built-in regularization to reduce overfitting  
+
+**CatBoost Workflow:**
+Input Data → Encoding/Preprocessing → CatBoost Training → Prediction → Anomaly Score
+
+
+---
+
+# **2️⃣ Proposed Hybrid Model: TH-StackNet**
+
+The proposed model **TH-StackNet** (Tourism Hybrid Stacked Network) combines  
+traditional ML algorithms with a neural network to maximize anomaly detection accuracy.
+
+The architecture follows a **stacked ensemble** design:
+
+             ┌───────────────────────────┐
+             │     Input Feature Set      │
+             └──────────────┬────────────┘
+                            │
+          ┌─────────────────┼──────────────────┐
+          │                 │                  │
+          ▼                 ▼                  ▼
+  ┌─────────────┐   ┌─────────────┐    ┌────────────────┐
+  │ ML Model 1   │   │ ML Model 2   │    │ Neural Network │
+  │ (e.g., RF)   │   │ (e.g., XGB)  │    │   (Dense NN)   │
+  └─────────────┘   └─────────────┘    └────────────────┘
+          │                 │                  │
+          └───────────┬─────┴──────┬──────────┘
+                      ▼             ▼
+               ┌────────────────────────┐
+               │   Stacking Layer        │
+               │  (Meta-Learner Model)   │
+               └──────────────┬─────────┘
+                              ▼
+                     ┌────────────────┐
+                     │  Final Output  │
+                     │ (Anomaly Flag) │
+                     └────────────────┘
+                     
+
+---
+
+## 🔍 TH-StackNet Components
+
+### **🔹 Level-1 Models (Base Learners)**
+- Random Forest  
+- XGBoost  
+- Neural Network (Fully connected layers)
+
+These models learn independently and extract different feature relationships.
+
+### **🔹 Level-2 Model (Meta-Learner)**
+A lightweight ML model (e.g., Logistic Regression or LightGBM) that:
+- Takes predictions from Level-1 models  
+- Learns optimal combination weights  
+- Produces the final anomaly classification  
+
+---
+
+## ⚙️ Neural Network Sub-Architecture
+Input Layer
+↓
+Dense (64 units, ReLU)
+↓
+Dropout (0.3)
+↓
+Dense (32 units, ReLU)
+↓
+Dropout (0.2)
+↓
+Output Layer (Sigmoid)
+
+
+
+---
+
+## 🎯 Why TH-StackNet Works Better
+- Ensemble reduces variance and bias  
+- Neural network captures non-linear patterns  
+- ML models capture tree-based interactions  
+- Meta-learner blends strengths of all models  
+- More stable and robust for anomaly detection
+
+---
+
+## 📌 Summary Table
+
+| Component | Type | Purpose |
+|----------|------|---------|
+| CatBoost | Baseline | Benchmark model |
+| RF + XGB | Base Learners | Tree-based feature interactions |
+| Neural Network | Base Learner | Non-linear pattern extraction |
+| Meta-Learner | Final Layer | Combines all model outputs |
+
+---
+
 
 ---
 
